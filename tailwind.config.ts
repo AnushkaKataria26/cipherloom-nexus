@@ -57,6 +57,44 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // CipherLoom Brand Colors
+        cipher: {
+          navy: "hsl(var(--cipher-navy))",
+          blue: "hsl(var(--cipher-blue))",
+          cyan: "hsl(var(--cipher-cyan))",
+          purple: "hsl(var(--cipher-purple))",
+        },
+        profit: "hsl(var(--profit-green))",
+        loss: "hsl(var(--loss-red))",
+        warning: "hsl(var(--warning-amber))",
+        neutral: "hsl(var(--neutral-gray))",
+        surface: {
+          dark: "hsl(var(--surface-dark))",
+          medium: "hsl(var(--surface-medium))",
+          light: "hsl(var(--surface-light))",
+          accent: "hsl(var(--surface-accent))",
+        },
+        text: {
+          primary: "hsl(var(--text-primary))",
+          secondary: "hsl(var(--text-secondary))",
+          muted: "hsl(var(--text-muted))",
+        },
+      },
+      backgroundImage: {
+        'gradient-primary': 'var(--gradient-primary)',
+        'gradient-success': 'var(--gradient-success)',
+        'gradient-danger': 'var(--gradient-danger)',
+        'gradient-dark': 'var(--gradient-dark)',
+      },
+      boxShadow: {
+        'cipher-sm': 'var(--shadow-sm)',
+        'cipher-md': 'var(--shadow-md)',
+        'cipher-lg': 'var(--shadow-lg)',
+        'cipher-glow': 'var(--shadow-glow)',
+      },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
       },
       borderRadius: {
         lg: "var(--radius)",
