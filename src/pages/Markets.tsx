@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 const marketData = [
   { symbol: "BTC", name: "Bitcoin", price: "$43,567.89", change: "+5.23%", volume: "$28.5B", marketCap: "$850B", isPositive: true },
@@ -18,7 +19,23 @@ const marketData = [
 
 export default function Markets() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const { toast } = useToast();
 
+  const toggleFavorite = (symbol: string) => {
+    setFavorites(prev => {
+      const newFavorites = prev.includes(symbol) 
+        ? prev.filter(s => s !== symbol)
+        : [...prev, symbol];
+      
+      toast({
+        title: prev.includes(symbol) ? "Removed from favorites" : "Added to favorites",
+        description: `${symbol} ${prev.includes(symbol) ? 'removed from' : 'added to'} your watchlist`,
+      });
+      
+      return newFavorites;
+    });
+  };
   const filteredMarkets = marketData.filter(coin => 
     coin.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     coin.symbol.toLowerCase().includes(searchQuery.toLowerCase())
@@ -56,8 +73,13 @@ export default function Markets() {
                   {filteredMarkets.map((coin) => (
                     <div key={coin.symbol} className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-surface-accent transition-colors">
                       <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <Star className="h-4 w-4" />
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 w-8 p-0"
+                          onClick={() => toggleFavorite(coin.symbol)}
+                        >
+                          <Star className={`h-4 w-4 ${favorites.includes(coin.symbol) ? 'fill-cipher-blue text-cipher-blue' : ''}`} />
                         </Button>
                         <div>
                           <div className="flex items-center gap-2">

@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Bell, Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 const alerts = [
   { coin: "BTC", condition: "Price above $45,000", status: "active", type: "price" },
@@ -12,6 +13,14 @@ const alerts = [
 ];
 
 export default function Alerts() {
+  const { toast } = useToast();
+
+  const handleCreateAlert = () => {
+    toast({
+      title: "Create new alert",
+      description: "Alert configuration form opening soon",
+    });
+  };
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -25,7 +34,7 @@ export default function Alerts() {
           <main className="p-6 space-y-6">
             <div className="flex items-center justify-between">
               <p className="text-muted-foreground">Set custom alerts for price movements and market events</p>
-              <Button>
+              <Button onClick={handleCreateAlert}>
                 <Plus className="h-4 w-4 mr-2" />
                 Create Alert
               </Button>

@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/s
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Play, Calculator, Award } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const courses = [
   { title: "Crypto Basics", level: "Beginner", duration: "2 hours", icon: BookOpen },
@@ -11,6 +12,14 @@ const courses = [
 ];
 
 export default function Education() {
+  const { toast } = useToast();
+
+  const handleStartCourse = (courseTitle: string) => {
+    toast({
+      title: "Course starting",
+      description: `Loading ${courseTitle}...`,
+    });
+  };
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -28,7 +37,7 @@ export default function Education() {
               </CardHeader>
               <CardContent>
                 <p className="mb-4">Master cryptocurrency trading with our comprehensive courses and tutorials</p>
-                <Button variant="secondary">Get Started</Button>
+                <Button variant="secondary" onClick={() => handleStartCourse("Crypto Trading 101")}>Get Started</Button>
               </CardContent>
             </Card>
 
@@ -50,7 +59,7 @@ export default function Education() {
                       <span className="text-muted-foreground">Duration:</span>
                       <span className="font-medium">{course.duration}</span>
                     </div>
-                    <Button className="w-full">Start Learning</Button>
+                    <Button className="w-full" onClick={() => handleStartCourse(course.title)}>Start Learning</Button>
                   </CardContent>
                 </Card>
               ))}

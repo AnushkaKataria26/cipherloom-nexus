@@ -5,10 +5,31 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Converter() {
   const [fromAmount, setFromAmount] = useState("1");
   const [toAmount, setToAmount] = useState("43567.89");
+  const [fromCurrency, setFromCurrency] = useState("BTC");
+  const [toCurrency, setToCurrency] = useState("USD");
+  const { toast } = useToast();
+
+  const handleSwap = () => {
+    const tempCurrency = fromCurrency;
+    setFromCurrency(toCurrency);
+    setToCurrency(tempCurrency);
+    
+    const tempAmount = fromAmount;
+    setFromAmount(toAmount);
+    setToAmount(tempAmount);
+  };
+
+  const handleConvert = () => {
+    toast({
+      title: "Conversion complete",
+      description: `${fromAmount} ${fromCurrency} = ${toAmount} ${toCurrency}`,
+    });
+  };
 
   return (
     <SidebarProvider>
@@ -41,7 +62,12 @@ export default function Converter() {
                   </div>
 
                   <div className="flex justify-center">
-                    <Button variant="ghost" size="sm" className="rounded-full">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="rounded-full"
+                      onClick={handleSwap}
+                    >
                       <ArrowUpDown className="h-4 w-4" />
                     </Button>
                   </div>
@@ -64,7 +90,7 @@ export default function Converter() {
                     <div className="text-lg font-semibold">1 BTC = $43,567.89 USD</div>
                   </div>
 
-                  <Button className="w-full" size="lg">Convert</Button>
+                  <Button className="w-full" size="lg" onClick={handleConvert}>Convert</Button>
                 </CardContent>
               </Card>
             </div>

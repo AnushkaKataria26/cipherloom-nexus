@@ -4,8 +4,24 @@ import { PortfolioWidget } from "@/components/dashboard/PortfolioWidget";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Download } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Portfolio() {
+  const { toast } = useToast();
+
+  const handleExport = () => {
+    toast({
+      title: "Exporting portfolio",
+      description: "Your portfolio data is being prepared for download",
+    });
+  };
+
+  const handleAddTransaction = () => {
+    toast({
+      title: "Add transaction",
+      description: "Transaction form opening soon",
+    });
+  };
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background">
@@ -20,11 +36,11 @@ export default function Portfolio() {
             <div className="flex items-center justify-between">
               <p className="text-muted-foreground">Manage your crypto holdings and track performance</p>
               <div className="flex gap-2">
-                <Button variant="outline">
+                <Button variant="outline" onClick={handleExport}>
                   <Download className="h-4 w-4 mr-2" />
                   Export
                 </Button>
-                <Button>
+                <Button onClick={handleAddTransaction}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Transaction
                 </Button>
