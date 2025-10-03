@@ -1,4 +1,5 @@
 import { TrendingUp, TrendingDown, PieChart, Eye } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -54,9 +55,11 @@ export function PortfolioWidget() {
     <Card className="bg-card border-border">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-lg font-semibold">Portfolio Overview</CardTitle>
-        <Button variant="ghost" size="sm" className="text-muted-foreground">
-          <Eye className="w-4 h-4 mr-2" />
-          View Details
+        <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
+          <Link to="/portfolio">
+            <Eye className="w-4 h-4 mr-2" />
+            View Details
+          </Link>
         </Button>
       </CardHeader>
       <CardContent>

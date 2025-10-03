@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { Header } from "@/components/layout/Header";
@@ -37,12 +38,12 @@ const Index = () => {
                     and market analysis. Stay ahead of the market with real-time insights and AI-powered forecasting.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <button className="px-6 py-3 bg-gradient-primary text-primary-foreground font-semibold rounded-lg hover:shadow-cipher-glow transition-all duration-200">
+                    <Link to="/markets" className="px-6 py-3 bg-gradient-primary text-primary-foreground font-semibold rounded-lg hover:shadow-cipher-glow transition-all duration-200 text-center">
                       Explore Markets
-                    </button>
-                    <button className="px-6 py-3 bg-surface-light text-foreground font-semibold rounded-lg border border-border hover:bg-surface-accent transition-all duration-200">
+                    </Link>
+                    <Link to="/education" className="px-6 py-3 bg-surface-light text-foreground font-semibold rounded-lg border border-border hover:bg-surface-accent transition-all duration-200 text-center">
                       Start Learning
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

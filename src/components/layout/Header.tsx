@@ -1,4 +1,5 @@
-import { Bell, Search, User, Moon, Sun } from "lucide-react";
+import { Bell, Search, User, Moon, Sun, LogIn } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -43,26 +44,13 @@ export function Header() {
             </span>
           </Button>
 
-          {/* User Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center gap-2 h-9">
-                <div className="w-7 h-7 rounded-full bg-gradient-primary flex items-center justify-center">
-                  <User className="w-4 h-4 text-primary-foreground" />
-                </div>
-                <span className="hidden md:block font-medium">John Doe</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 bg-card border-border">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-border" />
-              <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Billing</DropdownMenuItem>
-              <DropdownMenuItem>API Keys</DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-border" />
-              <DropdownMenuItem className="text-loss">Log out</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Sign In Button */}
+          <Button variant="default" size="sm" asChild>
+            <Link to="/auth">
+              <LogIn className="w-4 h-4 mr-2" />
+              Sign In
+            </Link>
+          </Button>
         </div>
       </div>
     </header>
