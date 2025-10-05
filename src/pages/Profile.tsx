@@ -21,6 +21,12 @@ export default function Profile() {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [phone, setPhone] = useState("");
+  const [location, setLocation] = useState("");
+  const [website, setWebsite] = useState("");
+  const [twitter, setTwitter] = useState("");
+  const [linkedin, setLinkedin] = useState("");
+  const [profileCompleted, setProfileCompleted] = useState(false);
 
   useEffect(() => {
     if (!session) {
@@ -46,6 +52,12 @@ export default function Profile() {
         setDisplayName(data.display_name || "");
         setBio(data.bio || "");
         setAvatarUrl(data.avatar_url || "");
+        setPhone(data.phone || "");
+        setLocation(data.location || "");
+        setWebsite(data.website || "");
+        setTwitter(data.twitter || "");
+        setLinkedin(data.linkedin || "");
+        setProfileCompleted(data.profile_completed || false);
       }
     } catch (error: any) {
       toast({
@@ -75,6 +87,12 @@ export default function Profile() {
             display_name: displayName,
             bio: bio,
             avatar_url: avatarUrl,
+            phone: phone,
+            location: location,
+            website: website,
+            twitter: twitter,
+            linkedin: linkedin,
+            profile_completed: true,
           })
           .eq("user_id", user?.id);
 
@@ -89,6 +107,12 @@ export default function Profile() {
             display_name: displayName,
             bio: bio,
             avatar_url: avatarUrl,
+            phone: phone,
+            location: location,
+            website: website,
+            twitter: twitter,
+            linkedin: linkedin,
+            profile_completed: true,
           });
 
         if (error) throw error;
@@ -98,6 +122,11 @@ export default function Profile() {
         title: "Profile updated",
         description: "Your profile has been updated successfully",
       });
+
+      // Redirect to dashboard after first profile completion
+      if (!profileCompleted) {
+        navigate("/");
+      }
     } catch (error: any) {
       toast({
         title: "Error updating profile",
@@ -123,7 +152,7 @@ export default function Profile() {
           <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
             <SidebarTrigger />
             <h1 className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              Profile
+              {!profileCompleted ? "Complete Your Profile" : "Profile"}
             </h1>
           </header>
 
@@ -163,7 +192,7 @@ export default function Profile() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="display-name">Display Name</Label>
+                  <Label htmlFor="display-name">Display Name *</Label>
                   <Input
                     id="display-name"
                     value={displayName}
@@ -184,9 +213,68 @@ export default function Profile() {
                   />
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <Input
+                      id="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+1 (555) 000-0000"
+                      className="bg-surface-light border-border"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="City, Country"
+                      className="bg-surface-light border-border"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="website">Website</Label>
+                  <Input
+                    id="website"
+                    value={website}
+                    onChange={(e) => setWebsite(e.target.value)}
+                    placeholder="https://yourwebsite.com"
+                    className="bg-surface-light border-border"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="twitter">Twitter Handle</Label>
+                    <Input
+                      id="twitter"
+                      value={twitter}
+                      onChange={(e) => setTwitter(e.target.value)}
+                      placeholder="@username"
+                      className="bg-surface-light border-border"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="linkedin">LinkedIn Profile</Label>
+                    <Input
+                      id="linkedin"
+                      value={linkedin}
+                      onChange={(e) => setLinkedin(e.target.value)}
+                      placeholder="linkedin.com/in/username"
+                      className="bg-surface-light border-border"
+                    />
+                  </div>
+                </div>
+
                 <Button onClick={handleUpdateProfile} className="w-full">
                   <User className="w-4 h-4 mr-2" />
-                  Update Profile
+                  {!profileCompleted ? "Complete Profile" : "Update Profile"}
                 </Button>
               </CardContent>
             </Card>

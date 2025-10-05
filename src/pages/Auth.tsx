@@ -29,18 +29,31 @@ export default function Auth() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) throw error;
 
+      // Check if profile is completed
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("profile_completed")
+        .eq("user_id", data.user.id)
+        .maybeSingle();
+
       toast({
         title: "Signed in successfully",
         description: "Welcome back to CipherLoom!",
       });
-      navigate("/profile");
+
+      // Redirect based on profile completion
+      if (profile?.profile_completed) {
+        navigate("/");
+      } else {
+        navigate("/profile");
+      }
     } catch (error: any) {
       toast({
         title: "Error signing in",
