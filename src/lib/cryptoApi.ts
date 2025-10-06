@@ -86,3 +86,23 @@ export async function fetchGlobalMarketData() {
     return null;
   }
 }
+
+export async function fetchHistoricalData(coinId: string, days: number = 7) {
+  try {
+    const response = await fetch(
+      `${COINGECKO_API_BASE}/coins/${coinId}/market_chart?vs_currency=usd&days=${days}`
+    );
+    
+    if (!response.ok) throw new Error('Failed to fetch historical data');
+    
+    const data = await response.json();
+    return data.prices.map(([timestamp, price]: [number, number]) => ({
+      timestamp,
+      date: new Date(timestamp).toLocaleDateString(),
+      price: price,
+    }));
+  } catch (error) {
+    console.error('Error fetching historical data:', error);
+    return [];
+  }
+}

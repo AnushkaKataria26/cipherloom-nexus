@@ -14,6 +14,7 @@ import Alerts from "./pages/Alerts";
 import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
 import Profile from "./pages/Profile";
+import CoinDetail from "./pages/CoinDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/markets" element={<Markets />} />
+            <Route path="/coin/:coinId" element={<CoinDetail />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/converter" element={<Converter />} />

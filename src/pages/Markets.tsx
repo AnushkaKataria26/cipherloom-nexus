@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, TrendingUp, TrendingDown, Star } from "lucide-react";
 import { AppSidebar } from "@/components/layout/AppSidebar";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
@@ -10,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { fetchTopCryptos, CryptoPrice } from "@/lib/cryptoApi";
 
 export default function Markets() {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [cryptoData, setCryptoData] = useState<CryptoPrice[]>([]);
@@ -102,7 +104,7 @@ export default function Markets() {
                 ) : (
                   <div className="space-y-4">
                     {filteredMarkets.map((coin) => (
-                      <div key={coin.id} className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-surface-accent transition-colors">
+                      <div key={coin.id} className="flex items-center justify-between p-4 rounded-lg border border-border hover:bg-surface-accent transition-colors cursor-pointer" onClick={() => navigate(`/coin/${coin.id}`)}>
                         <div className="flex items-center gap-4">
                           <Button 
                             variant="ghost" 
