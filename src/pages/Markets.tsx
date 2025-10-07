@@ -9,9 +9,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { fetchTopCryptos, CryptoPrice } from "@/lib/cryptoApi";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
 
 export default function Markets() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [cryptoData, setCryptoData] = useState<CryptoPrice[]>([]);
@@ -20,10 +24,12 @@ export default function Markets() {
 
   useEffect(() => {
     loadCryptoData();
-    // Refresh data every 30 seconds
+    if (user) {
+      loadFavorites();
+    }
     const interval = setInterval(loadCryptoData, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [user]);
 
   const loadCryptoData = async () => {
     const data = await fetchTopCryptos(50);
@@ -31,19 +37,82 @@ export default function Markets() {
     setLoading(false);
   };
 
-  const toggleFavorite = (symbol: string) => {
-    setFavorites(prev => {
-      const newFavorites = prev.includes(symbol) 
-        ? prev.filter(s => s !== symbol)
-        : [...prev, symbol];
-      
+  const loadFavorites = async () => {
+    if (!user) return;
+    
+    const { data, error } = await supabase
+      .from('watchlist')
+      .select('coin_id')
+      .eq('user_id', user.id);
+    
+    if (error) {
+      console.error('Error loading favorites:', error);
+      return;
+    }
+    
+    setFavorites(data?.map(item => item.coin_id) || []);
+  };
+
+  const toggleFavorite = async (coin: CryptoPrice, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    if (!user) {
       toast({
-        title: prev.includes(symbol) ? "Removed from favorites" : "Added to favorites",
-        description: `${symbol} ${prev.includes(symbol) ? 'removed from' : 'added to'} your watchlist`,
+        title: "Sign in required",
+        description: "Please sign in to add favorites",
+        variant: "destructive",
       });
+      return;
+    }
+
+    const isFavorite = favorites.includes(coin.id);
+    
+    if (isFavorite) {
+      const { error } = await supabase
+        .from('watchlist')
+        .delete()
+        .eq('user_id', user.id)
+        .eq('coin_id', coin.id);
       
-      return newFavorites;
-    });
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to remove from favorites",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setFavorites(prev => prev.filter(id => id !== coin.id));
+      toast({
+        title: "Removed from favorites",
+        description: `${coin.symbol.toUpperCase()} removed from your watchlist`,
+      });
+    } else {
+      const { error } = await supabase
+        .from('watchlist')
+        .insert({
+          user_id: user.id,
+          coin_id: coin.id,
+          coin_symbol: coin.symbol,
+          coin_name: coin.name,
+        });
+      
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to add to favorites",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setFavorites(prev => [...prev, coin.id]);
+      toast({
+        title: "Added to favorites",
+        description: `${coin.symbol.toUpperCase()} added to your watchlist`,
+      });
+    }
   };
 
   const filteredMarkets = cryptoData.filter(coin => 
@@ -110,9 +179,9 @@ export default function Markets() {
                             variant="ghost" 
                             size="sm" 
                             className="h-8 w-8 p-0"
-                            onClick={() => toggleFavorite(coin.symbol)}
+                            onClick={(e) => toggleFavorite(coin, e)}
                           >
-                            <Star className={`h-4 w-4 ${favorites.includes(coin.symbol) ? 'fill-cipher-blue text-cipher-blue' : ''}`} />
+                            <Star className={`h-4 w-4 ${favorites.includes(coin.id) ? 'fill-cipher-blue text-cipher-blue' : ''}`} />
                           </Button>
                           {coin.image && (
                             <img src={coin.image} alt={coin.name} className="w-8 h-8 rounded-full" />
