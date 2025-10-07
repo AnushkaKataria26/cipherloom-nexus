@@ -106,3 +106,37 @@ export async function fetchHistoricalData(coinId: string, days: number = 7) {
     return [];
   }
 }
+
+export interface CryptoNewsItem {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  source: string;
+  published_at: string;
+  image_url?: string;
+}
+
+export async function fetchCryptoNews(limit: number = 10): Promise<CryptoNewsItem[]> {
+  try {
+    const response = await fetch(
+      `https://min-api.cryptocompare.com/data/v2/news/?lang=EN&sortOrder=latest`
+    );
+    
+    if (!response.ok) throw new Error('Failed to fetch news');
+    
+    const data = await response.json();
+    return data.Data.slice(0, limit).map((article: any) => ({
+      id: article.id,
+      title: article.title,
+      description: article.body,
+      url: article.url,
+      source: article.source_info.name,
+      published_at: new Date(article.published_on * 1000).toISOString(),
+      image_url: article.imageurl,
+    }));
+  } catch (error) {
+    console.error('Error fetching crypto news:', error);
+    return [];
+  }
+}
