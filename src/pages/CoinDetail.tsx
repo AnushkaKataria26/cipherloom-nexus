@@ -83,7 +83,7 @@ export default function CoinDetail() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-3">
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle>Current Price</CardTitle>
                 </CardHeader>
@@ -93,8 +93,8 @@ export default function CoinDetail() {
                   </p>
                   <div className={`flex items-center gap-1 mt-2 ${
                     coinData.price_change_percentage_24h >= 0
-                      ? "text-green-600"
-                      : "text-red-600"
+                      ? "text-profit"
+                      : "text-loss"
                   }`}>
                     {coinData.price_change_percentage_24h >= 0 ? (
                       <TrendingUp className="h-4 w-4" />
@@ -108,7 +108,7 @@ export default function CoinDetail() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle>Market Cap</CardTitle>
                 </CardHeader>
@@ -116,10 +116,13 @@ export default function CoinDetail() {
                   <p className="text-3xl font-bold">
                     ${(coinData.market_cap / 1e9).toFixed(2)}B
                   </p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Rank #{coinData.market_cap_rank || 'N/A'}
+                  </p>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="bg-card border-border">
                 <CardHeader>
                   <CardTitle>24h Volume</CardTitle>
                 </CardHeader>
@@ -127,6 +130,95 @@ export default function CoinDetail() {
                   <p className="text-3xl font-bold">
                     ${(coinData.total_volume / 1e9).toFixed(2)}B
                   </p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    High: ${coinData.high_24h?.toLocaleString() || 'N/A'}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>Market Statistics</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">24h High</span>
+                    <span className="font-semibold">${coinData.high_24h?.toLocaleString() || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">24h Low</span>
+                    <span className="font-semibold">${coinData.low_24h?.toLocaleString() || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Circulating Supply</span>
+                    <span className="font-semibold">
+                      {coinData.circulating_supply 
+                        ? `${(coinData.circulating_supply / 1e6).toFixed(2)}M` 
+                        : 'N/A'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total Supply</span>
+                    <span className="font-semibold">
+                      {coinData.total_supply 
+                        ? `${(coinData.total_supply / 1e6).toFixed(2)}M` 
+                        : 'N/A'}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-card border-border">
+                <CardHeader>
+                  <CardTitle>Price Changes</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">1 Hour</span>
+                    <span className={`font-semibold ${
+                      (coinData.price_change_percentage_1h_in_currency || 0) >= 0 
+                        ? 'text-profit' 
+                        : 'text-loss'
+                    }`}>
+                      {(coinData.price_change_percentage_1h_in_currency || 0) >= 0 ? '+' : ''}
+                      {(coinData.price_change_percentage_1h_in_currency || 0).toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">24 Hours</span>
+                    <span className={`font-semibold ${
+                      coinData.price_change_percentage_24h >= 0 
+                        ? 'text-profit' 
+                        : 'text-loss'
+                    }`}>
+                      {coinData.price_change_percentage_24h >= 0 ? '+' : ''}
+                      {coinData.price_change_percentage_24h.toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">7 Days</span>
+                    <span className={`font-semibold ${
+                      (coinData.price_change_percentage_7d_in_currency || 0) >= 0 
+                        ? 'text-profit' 
+                        : 'text-loss'
+                    }`}>
+                      {(coinData.price_change_percentage_7d_in_currency || 0) >= 0 ? '+' : ''}
+                      {(coinData.price_change_percentage_7d_in_currency || 0).toFixed(2)}%
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">30 Days</span>
+                    <span className={`font-semibold ${
+                      (coinData.price_change_percentage_30d_in_currency || 0) >= 0 
+                        ? 'text-profit' 
+                        : 'text-loss'
+                    }`}>
+                      {(coinData.price_change_percentage_30d_in_currency || 0) >= 0 ? '+' : ''}
+                      {(coinData.price_change_percentage_30d_in_currency || 0).toFixed(2)}%
+                    </span>
+                  </div>
                 </CardContent>
               </Card>
             </div>

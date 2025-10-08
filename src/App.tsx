@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ProfileCompletionDialog } from "@/components/profile/ProfileCompletionDialog";
 import Index from "./pages/Index";
 import Markets from "./pages/Markets";
 import Portfolio from "./pages/Portfolio";
@@ -26,21 +28,24 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/markets" element={<Markets />} />
-            <Route path="/coin/:coinId" element={<CoinDetail />} />
-            <Route path="/portfolio" element={<Portfolio />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/converter" element={<Converter />} />
-            <Route path="/education" element={<Education />} />
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/profile" element={<Profile />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <ThemeProvider>
+            <ProfileCompletionDialog />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/markets" element={<Markets />} />
+              <Route path="/coin/:coinId" element={<CoinDetail />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/converter" element={<Converter />} />
+              <Route path="/education" element={<Education />} />
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/profile" element={<Profile />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

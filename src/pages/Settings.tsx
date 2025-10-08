@@ -10,17 +10,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { LogOut, Save } from "lucide-react";
 
 export default function Settings() {
   const navigate = useNavigate();
   const { user, session, signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   
   const [defaultCurrency, setDefaultCurrency] = useState("USD");
-  const [themePreference, setThemePreference] = useState("system");
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
   const [priceAlertNotifications, setPriceAlertNotifications] = useState(true);
@@ -47,7 +48,6 @@ export default function Settings() {
 
       if (data) {
         setDefaultCurrency(data.default_currency);
-        setThemePreference(data.theme_preference);
         setEmailNotifications(data.email_notifications);
         setPushNotifications(data.push_notifications);
         setPriceAlertNotifications(data.price_alert_notifications);
@@ -78,7 +78,7 @@ export default function Settings() {
       const settings = {
         user_id: user.id,
         default_currency: defaultCurrency,
-        theme_preference: themePreference,
+        theme_preference: theme,
         email_notifications: emailNotifications,
         push_notifications: pushNotifications,
         price_alert_notifications: priceAlertNotifications,
@@ -159,7 +159,7 @@ export default function Settings() {
 
                 <div className="space-y-2">
                   <Label htmlFor="theme">Theme Preference</Label>
-                  <Select value={themePreference} onValueChange={setThemePreference}>
+                  <Select value={theme} onValueChange={(value: any) => setTheme(value)}>
                     <SelectTrigger id="theme">
                       <SelectValue />
                     </SelectTrigger>
