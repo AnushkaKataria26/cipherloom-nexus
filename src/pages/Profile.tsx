@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { User, UserCircle, Upload, Loader2 } from "lucide-react";
+import { User, UserCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Profile() {
@@ -18,7 +18,6 @@ export default function Profile() {
   const { toast } = useToast();
   const { user, session } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -68,53 +67,6 @@ export default function Profile() {
       });
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      setUploading(true);
-      
-      if (!event.target.files || event.target.files.length === 0) {
-        return;
-      }
-
-      const file = event.target.files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user?.id}/${Math.random()}.${fileExt}`;
-
-      // Delete old avatar if exists
-      if (avatarUrl) {
-        const oldPath = avatarUrl.split('/').slice(-2).join('/');
-        await supabase.storage.from('avatars').remove([oldPath]);
-      }
-
-      // Upload new avatar
-      const { error: uploadError, data } = await supabase.storage
-        .from('avatars')
-        .upload(fileName, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
-
-      setAvatarUrl(publicUrl);
-
-      toast({
-        title: "Avatar uploaded",
-        description: "Your profile picture has been updated",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Error uploading avatar",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(false);
     }
   };
 
@@ -211,37 +163,21 @@ export default function Profile() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-center gap-6">
-                  <div className="relative">
-                    <Avatar className="w-24 h-24">
-                      <AvatarImage src={avatarUrl} />
-                      <AvatarFallback className="bg-gradient-primary text-white">
-                        <UserCircle className="w-12 h-12" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <label
-                      htmlFor="avatar-upload"
-                      className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-2 cursor-pointer hover:bg-primary/90 transition-colors"
-                    >
-                      {uploading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Upload className="w-4 h-4" />
-                      )}
-                      <input
-                        id="avatar-upload"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleAvatarUpload}
-                        disabled={uploading}
-                      />
-                    </label>
-                  </div>
+                  <Avatar className="w-24 h-24">
+                    <AvatarImage src={avatarUrl} />
+                    <AvatarFallback className="bg-gradient-primary text-white">
+                      <UserCircle className="w-12 h-12" />
+                    </AvatarFallback>
+                  </Avatar>
                   <div className="flex-1 space-y-2">
-                    <Label>Profile Picture</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Click the upload button to change your profile picture
-                    </p>
+                    <Label htmlFor="avatar-url">Avatar URL</Label>
+                    <Input
+                      id="avatar-url"
+                      value={avatarUrl}
+                      onChange={(e) => setAvatarUrl(e.target.value)}
+                      placeholder="https://example.com/avatar.jpg"
+                      className="bg-surface-light border-border"
+                    />
                   </div>
                 </div>
 

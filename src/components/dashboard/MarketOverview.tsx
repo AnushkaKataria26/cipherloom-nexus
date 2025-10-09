@@ -1,54 +1,38 @@
-import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, DollarSign, BarChart3 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchGlobalMarketData } from "@/lib/cryptoApi";
+
+const marketStats = [
+  {
+    title: "Total Market Cap",
+    value: "$2.45T",
+    change: "+2.34%",
+    isPositive: true,
+    icon: DollarSign,
+  },
+  {
+    title: "24h Volume",
+    value: "$89.2B",
+    change: "-1.23%",
+    isPositive: false,
+    icon: BarChart3,
+  },
+  {
+    title: "BTC Dominance",
+    value: "42.8%",
+    change: "+0.45%",
+    isPositive: true,
+    icon: TrendingUp,
+  },
+  {
+    title: "Active Cryptocurrencies",
+    value: "13,247",
+    change: "+12",
+    isPositive: true,
+    icon: TrendingUp,
+  },
+];
 
 export function MarketOverview() {
-  const [marketData, setMarketData] = useState<any>(null);
-
-  useEffect(() => {
-    loadMarketData();
-    const interval = setInterval(loadMarketData, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadMarketData = async () => {
-    const data = await fetchGlobalMarketData();
-    if (data) setMarketData(data);
-  };
-
-  if (!marketData) return null;
-
-  const marketStats = [
-    {
-      title: "Total Market Cap",
-      value: `$${(marketData.total_market_cap.usd / 1e12).toFixed(2)}T`,
-      change: `${marketData.market_cap_change_percentage_24h_usd > 0 ? '+' : ''}${marketData.market_cap_change_percentage_24h_usd.toFixed(2)}%`,
-      isPositive: marketData.market_cap_change_percentage_24h_usd > 0,
-      icon: DollarSign,
-    },
-    {
-      title: "24h Volume",
-      value: `$${(marketData.total_volume.usd / 1e9).toFixed(1)}B`,
-      change: `${marketData.market_cap_change_percentage_24h_usd > 0 ? '+' : ''}${marketData.market_cap_change_percentage_24h_usd.toFixed(2)}%`,
-      isPositive: marketData.market_cap_change_percentage_24h_usd > 0,
-      icon: BarChart3,
-    },
-    {
-      title: "BTC Dominance",
-      value: `${marketData.market_cap_percentage.btc.toFixed(1)}%`,
-      change: `${marketData.market_cap_percentage.btc > 50 ? '+' : '-'}0.5%`,
-      isPositive: marketData.market_cap_percentage.btc > 50,
-      icon: TrendingUp,
-    },
-    {
-      title: "Active Cryptocurrencies",
-      value: marketData.active_cryptocurrencies.toLocaleString(),
-      change: `+${marketData.markets}`,
-      isPositive: true,
-      icon: TrendingUp,
-    },
-  ];
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       {marketStats.map((stat) => (
