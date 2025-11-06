@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { User, UserCircle, Upload, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { CountrySelect } from "@/components/profile/CountrySelect";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export default function Profile() {
   const [bio, setBio] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneCode, setPhoneCode] = useState("");
   const [location, setLocation] = useState("");
   const [website, setWebsite] = useState("");
   const [twitter, setTwitter] = useState("");
@@ -279,25 +281,32 @@ export default function Profile() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input
-                      id="phone"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      placeholder="+1 (555) 000-0000"
-                      className="bg-surface-light border-border"
+                    <Label htmlFor="location">Country</Label>
+                    <CountrySelect 
+                      value={location}
+                      onChange={(country) => {
+                        setLocation(country.name);
+                        setPhoneCode(country.code);
+                      }}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="location">Location</Label>
-                    <Input
-                      id="location"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      placeholder="City, Country"
-                      className="bg-surface-light border-border"
-                    />
+                    <Label htmlFor="phone">Phone Number</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        value={phoneCode}
+                        disabled
+                        className="w-20 bg-surface-light border-border opacity-60"
+                      />
+                      <Input
+                        id="phone"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="(555) 000-0000"
+                        className="flex-1 bg-surface-light border-border"
+                      />
+                    </div>
                   </div>
                 </div>
 

@@ -20,9 +20,25 @@ export default function Auth() {
 
   useEffect(() => {
     if (session) {
-      navigate("/profile");
+      checkProfileCompletion();
     }
   }, [session, navigate]);
+
+  const checkProfileCompletion = async () => {
+    if (!session?.user) return;
+    
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("profile_completed")
+      .eq("user_id", session.user.id)
+      .maybeSingle();
+
+    if (profile?.profile_completed) {
+      navigate("/");
+    } else {
+      navigate("/profile");
+    }
+  };
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
